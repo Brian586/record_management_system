@@ -4,10 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:record_management_system/config.dart';
 import 'package:record_management_system/routes.dart';
-import 'package:record_management_system/widgets/custom_wrapper.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
 
   runApp(const MyApp());
 }

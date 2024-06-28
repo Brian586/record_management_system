@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "912220333816",
+    "project_id": "recordmanagementsystem-23068",
+    "storage_bucket": "recordmanagementsystem-23068.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912220333816:android:b9ab8f99c5fab4808bbd0d",
+        "android_client_info": {
+          "package_name": "com.example.record_management_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0cQXweu7NPaIFXX6ybhJ34rQgtHlSwBQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
