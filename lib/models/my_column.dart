@@ -45,3 +45,10 @@ List<MyColumn> computersColumns = [
   MyColumn(columnName: "condition", title: "Condition", width: 150.0),
   MyColumn(columnName: "date", title: "date", width: 150.0),
 ];
+
+List<MyColumn> sewingMachineColumns = [
+  MyColumn(columnName: "id", title: "Sewing Machine id", width: 200.0),
+  MyColumn(
+      columnName: "condition", title: "Sewing Machine condition", width: 200.0),
+  MyColumn(columnName: "date", title: "date", width: 200.0),
+];

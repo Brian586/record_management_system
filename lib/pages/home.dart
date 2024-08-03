@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:record_management_system/pages/computers.dart';
 import 'package:record_management_system/pages/dashboard.dart';
+import 'package:record_management_system/pages/sewingmachines.dart';
 import 'package:record_management_system/pages/textbooks.dart';
 import 'package:record_management_system/widgets/custom_appbar.dart';
 import 'package:record_management_system/widgets/custom_drawer.dart';
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       case "textbooks":
         return Textbooks();
       case "sewing_machines":
-        return Text("sewing_machines");
+        return SewingMachines();
       case "computers":
         return Computers();
       case "settings":
