@@ -9,7 +9,7 @@ class MyColumn {
 List<MyColumn> textbooksColumns = [
   MyColumn(
     columnName: "id",
-    title: "Textbook id",
+    title: "Textbook ID",
     width: 100.0,
   ),
   MyColumn(
@@ -34,16 +34,26 @@ List<MyColumn> textbooksColumns = [
   ),
   MyColumn(
     columnName: "created",
-    title: "Date uploaded",
+    title: "Date Uploaded",
     width: 100.0,
   ),
+  MyColumn(
+    columnName: "actions",
+    title: "Actions",
+    width: 250.0,
+  )
 ];
 
 List<MyColumn> computersColumns = [
-  MyColumn(columnName: "id", title: "Computer id", width: 150.0),
+  MyColumn(columnName: "id", title: "Computer ID", width: 150.0),
   MyColumn(columnName: "name", title: "Computer Name", width: 150.0),
   MyColumn(columnName: "condition", title: "Condition", width: 150.0),
-  MyColumn(columnName: "date", title: "date", width: 150.0),
+  MyColumn(columnName: "date", title: "Date Uploaded", width: 150.0),
+  MyColumn(
+    columnName: "actions",
+    title: "Actions",
+    width: 250.0,
+  )
 ];
 
 List<MyColumn> sewingMachineColumns = [
@@ -51,4 +61,9 @@ List<MyColumn> sewingMachineColumns = [
   MyColumn(
       columnName: "condition", title: "Sewing Machine condition", width: 200.0),
   MyColumn(columnName: "date", title: "date", width: 200.0),
+  MyColumn(
+    columnName: "actions",
+    title: "Actions",
+    width: 250.0,
+  )
 ];

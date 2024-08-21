@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:record_management_system/config.dart';
 import 'package:record_management_system/pages/computers.dart';
 import 'package:record_management_system/pages/dashboard.dart';
+import 'package:record_management_system/pages/settings.dart';
 import 'package:record_management_system/pages/sewingmachines.dart';
 import 'package:record_management_system/pages/textbooks.dart';
 import 'package:record_management_system/widgets/custom_appbar.dart';
 import 'package:record_management_system/widgets/custom_drawer.dart';
+import 'package:record_management_system/widgets/custom_scrollbar.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,41 +20,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Widget buildBody() {
     switch (widget.currentpage) {
       case "dashboard":
-        return Dashboard();
+        return Dashboard(
+          userid: widget.userid,
+        );
       case "textbooks":
-        return Textbooks();
+        return const Textbooks();
       case "sewing_machines":
-        return SewingMachines();
+        return const SewingMachines();
       case "computers":
-        return Computers();
+        return const Computers();
       case "settings":
-        return Text("settings");
+        return SettingsPage(userid: widget.userid);
       default:
-        return Text("error");
+        return const Text("error");
     }
   }
 
   Widget desktoplayout() {
     return Scaffold(
+      key: scaffoldKey,
       body: Row(
         children: [
           SizedBox(
-            width: 250.0,
+            width: Config.firstSectionMaxWidth,
             child: CustomDrawer(
               userid: widget.userid,
+              isMobile: false,
             ),
           ),
           Expanded(
               child: Column(
             children: [
-              CustomAppbar(),
+              CustomAppbar(
+                userid: widget.userid,
+                scaffoldKey: scaffoldKey,
+              ),
               Expanded(
-                  child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  child: CustomScrollBar(
+                controller: _controller,
+                child: SingleChildScrollView(
+                  controller: _controller,
                   child: buildBody(),
                 ),
               ))
@@ -67,11 +86,21 @@ class _HomePageState extends State<HomePage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      key: scaffoldKey,
+      drawer: CustomDrawer(
+        userid: widget.userid,
+        isMobile: true,
+      ),
       appBar: PreferredSize(
-          preferredSize: Size(size.width, 55.0), child: CustomAppbar()),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          preferredSize: Size(size.width, kToolbarHeight),
+          child: CustomAppbar(
+            userid: widget.userid,
+            scaffoldKey: scaffoldKey,
+          )),
+      body: CustomScrollBar(
+        controller: _controller,
+        child: SingleChildScrollView(
+          controller: _controller,
           child: buildBody(),
         ),
       ),

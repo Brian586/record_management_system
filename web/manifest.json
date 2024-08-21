@@ -1,11 +1,11 @@
 {
-    "name": "record_management_system",
-    "short_name": "record_management_system",
+    "name": "Record Management System",
+    "short_name": "Record Management System",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Manage school resources with ease!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

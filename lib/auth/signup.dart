@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:record_management_system/config.dart';
 import 'package:record_management_system/models/account.dart';
-import 'package:record_management_system/widgets/circular_progress.dart';
 
 import '../widgets/custom_wrapper.dart';
+import '../widgets/progress_widget.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -76,108 +76,122 @@ class _SignUpState extends State<SignUp> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       body: isloading
-          ? CircularProgress()
+          ? circularProgress()
           : Center(
-              child: CustomWrapper(
-                maxWidth: 500.0,
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        'Sign Up',
-                        style: TextStyle(
-                            fontSize: 24.0, fontWeight: FontWeight.bold),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Name", labelText: "Name"),
-                        onChanged: (value) {
-                          name = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "example@gmail.com", labelText: "Email"),
-                        onChanged: (value) {
-                          email = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Password", labelText: "Password"),
-                        onChanged: (value) {
-                          password = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Confirm Password",
-                            labelText: "Confirm Password"),
-                        onChanged: (value) {
-                          confirmPassword = value;
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          } else if (password != confirmPassword) {
-                            return "Passwords do not match";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              createUserAccount();
-                            }
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: CustomWrapper(
+                  maxWidth: 500.0,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Image.asset(
+                          Config.authImage,
+                          height: 150.0,
+                          width: 150.0,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                              fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: "Name", labelText: "Name"),
+                          onChanged: (value) {
+                            name = value;
                           },
-                          child: Text(
-                            "Sign up",
-                            style: TextStyle(color: Colors.white),
-                          )),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Text("Already have an account?"),
-                          TextButton(
-                              onPressed: () {
-                                context.go("/login");
-                              },
-                              child: Text(
-                                "Login",
-                                style: TextStyle(color: Config.themeColor),
-                              ))
-                        ],
-                      )
-                    ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: "example@gmail.com",
+                              labelText: "Email"),
+                          onChanged: (value) {
+                            email = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: "Password", labelText: "Password"),
+                          onChanged: (value) {
+                            password = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: "Confirm Password",
+                              labelText: "Confirm Password"),
+                          onChanged: (value) {
+                            confirmPassword = value;
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            } else if (password != confirmPassword) {
+                              return "Passwords do not match";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                createUserAccount();
+                              }
+                            },
+                            child: const Text(
+                              "Sign up",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Already have an account?"),
+                            TextButton(
+                                onPressed: () {
+                                  context.go("/login");
+                                },
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(color: Config.themeColor),
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

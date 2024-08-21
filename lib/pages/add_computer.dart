@@ -1,22 +1,59 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:record_management_system/common_functions/custom_toast.dart';
+import 'package:record_management_system/config.dart';
 import 'package:record_management_system/models/computer.dart';
-import 'package:record_management_system/widgets/circular_progress.dart';
 import 'package:record_management_system/widgets/custom_wrapper.dart';
+import 'package:record_management_system/widgets/progress_widget.dart';
 
 class AddComputer extends StatefulWidget {
-  const AddComputer({super.key});
+  final String computerID;
+  final RecordAction recordAction;
+  final void Function(String) exitPopup;
+  const AddComputer(
+      {super.key,
+      required this.computerID,
+      required this.recordAction,
+      required this.exitPopup});
 
   @override
   State<AddComputer> createState() => _AddComputerState();
 }
 
 class _AddComputerState extends State<AddComputer> {
-  String id = "";
-  String name = "";
-  String condition = "";
+  TextEditingController idCtrl = TextEditingController();
+  TextEditingController nameCtrl = TextEditingController();
+  TextEditingController conditionCtrl = TextEditingController();
   bool isloading = false;
+
+  Computer? oldComputer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.recordAction == RecordAction.edit) {
+      getRecordInfo();
+    }
+  }
+
+  Future<void> getRecordInfo() async {
+    setState(() {
+      isloading = true;
+    });
+
+    DocumentSnapshot doc =
+        await Config.computersCollection.doc(widget.computerID).get();
+
+    oldComputer = Computer.fromDocument(doc);
+
+    setState(() {
+      idCtrl.text = oldComputer!.computerid;
+      nameCtrl.text = oldComputer!.computername;
+      conditionCtrl.text = oldComputer!.condition;
+      isloading = false;
+    });
+  }
 
   void saveComputerInfo() async {
     setState(() {
@@ -24,28 +61,39 @@ class _AddComputerState extends State<AddComputer> {
     });
 
     try {
-      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      if (widget.recordAction == RecordAction.add) {
+        int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-      print(timestamp);
+        Computer computer = Computer(
+            computerid: idCtrl.text.trim(),
+            computername: nameCtrl.text.trim(),
+            condition: conditionCtrl.text.trim(),
+            timestamp: timestamp);
 
-      Computer computer = Computer(
-          computerid: id,
-          computername: name,
-          condition: condition,
-          timestamp: timestamp);
+        await Config.computersCollection
+            .doc(timestamp.toString())
+            .set(computer.toMap());
+      } else {
+        Computer computer = Computer(
+            computerid: idCtrl.text.trim(),
+            computername: nameCtrl.text.trim(),
+            condition: conditionCtrl.text.trim(),
+            timestamp: oldComputer!.timestamp);
 
-      await FirebaseFirestore.instance
-          .collection("computers")
-          .doc(timestamp.toString())
-          .set(computer.toMap());
+        await Config.computersCollection
+            .doc(oldComputer!.timestamp.toString())
+            .update(computer.toMap());
+      }
 
-      Fluttertoast.showToast(msg: "uploaded successfully");
+      showCustomToast("Saved successfully", type: "");
 
       setState(() {
         isloading = false;
       });
+
+      widget.exitPopup("success");
     } catch (error) {
-      Fluttertoast.showToast(msg: "an error occured");
+      showCustomToast("an error occured", type: "error");
 
       setState(() {
         isloading = false;
@@ -55,57 +103,70 @@ class _AddComputerState extends State<AddComputer> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomWrapper(
-      maxWidth: 500.0,
-      child: isloading
-          ? CircularProgress()
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "New computer",
-                  style: TextStyle(fontSize: 20.0),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: "Computer ID", hintText: "1,2,3..."),
-                  onChanged: (value) {
-                    id = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: "Computer Name",
-                      hintText: "Type something here"),
-                  onChanged: (value) {
-                    name = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: "Computer Condition",
-                      hintText: "Enter condition"),
-                  onChanged: (value) {
-                    condition = value;
-                  },
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      if (id.isNotEmpty &&
-                          name.isNotEmpty &&
-                          condition.isNotEmpty) {
-                        saveComputerInfo();
-                      }
-                    },
-                    child: Text(
-                      "Save",
-                      style: TextStyle(color: Colors.white),
-                    ))
-              ],
-            ),
+    return SingleChildScrollView(
+      child: CustomWrapper(
+        maxWidth: 500.0,
+        child: isloading
+            ? circularProgress()
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.recordAction == RecordAction.add
+                        ? "Add Computer"
+                        : "Edit Computer Details",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  TextFormField(
+                    controller: idCtrl,
+                    decoration: const InputDecoration(
+                        labelText: "Computer ID", hintText: "1,2,3..."),
+                  ),
+                  TextFormField(
+                    controller: nameCtrl,
+                    decoration: const InputDecoration(
+                        labelText: "Computer Name",
+                        hintText: "Type something here"),
+                  ),
+                  TextFormField(
+                    controller: conditionCtrl,
+                    decoration: const InputDecoration(
+                        labelText: "Computer Condition",
+                        hintText: "Enter condition"),
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () => widget.exitPopup("cancelled"),
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.grey),
+                          )),
+                      const SizedBox(width: 10.0),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (idCtrl.text.isNotEmpty &&
+                                nameCtrl.text.isNotEmpty &&
+                                conditionCtrl.text.isNotEmpty) {
+                              saveComputerInfo();
+                            }
+                          },
+                          child: Text(
+                            widget.recordAction == RecordAction.add
+                                ? "Save"
+                                : "Update",
+                            style: const TextStyle(color: Colors.white),
+                          )),
+                    ],
+                  )
+                ],
+              ),
+      ),
     );
   }
 }

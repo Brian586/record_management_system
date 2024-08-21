@@ -12,7 +12,7 @@ void main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-);
+  );
 
   runApp(const MyApp());
 }
@@ -24,13 +24,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title:Config.appName,
+      title: Config.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Config.themeColor),
-        useMaterial3: false,),
-        routerConfig: CustomRoutes.router,
-
+        useMaterial3: false,
+      ),
+      routerConfig: CustomRoutes.router,
     );
   }
 }
@@ -51,16 +51,21 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void displaySplash() {
-    Timer(const Duration(seconds: 3), () { 
+    Timer(const Duration(seconds: 3), () {
       GoRouter.of(context).go('/login');
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      body: Center(child: Text(Config.appName),),
+      body: Center(
+          child: Text(
+        Config.appName,
+        style: Theme.of(context).textTheme.titleLarge,
+      )),
     );
   }
 }
